@@ -1,7 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/screens/home_screen.dart';
+import 'package:food_for_all/firebase_options.dart';
+import 'package:food_for_all/screens/sign_in_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -10,9 +16,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return const MaterialApp(
+    return MaterialApp(
+      home: const SignInScreen(),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      darkTheme: ThemeData.dark(),
+      theme: ThemeData(
+        fontFamily: 'abyssinicaSil',
+      ),
     );
   }
 }
