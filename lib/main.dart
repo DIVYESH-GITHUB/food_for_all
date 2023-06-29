@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:food_for_all/firebase_options.dart';
-import 'package:food_for_all/screens/sign_in_screen.dart';
+import 'package:food_for_all/screens/sign_up_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,12 +17,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(context) {
     return MaterialApp(
-      home: const SignInScreen(),
+      home: const SignUpScreen(),
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark(),
-      theme: ThemeData(
-        fontFamily: 'abyssinicaSil',
-      ),
     );
   }
 }

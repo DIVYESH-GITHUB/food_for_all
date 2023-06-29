@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_for_all/screens/sign_up_screen.dart';
+import 'package:food_for_all/widgets/text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -36,64 +37,16 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                TextFormField(
-                  controller: _email,
-                  cursorColor: Colors.white,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: GoogleFonts.abyssinicaSil(
-                      color: Colors.white,
-                      fontSize: 18,
-                      letterSpacing: 2,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Colors.green,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    ),
-                  ),
+                textField(
+                  _email,
+                  'Email',
                 ),
                 const SizedBox(
                   height: 18,
                 ),
-                TextFormField(
-                  controller: _password,
-                  cursorColor: Colors.white,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: GoogleFonts.abyssinicaSil(
-                      color: Colors.white,
-                      fontSize: 18,
-                      letterSpacing: 2,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Colors.green,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    ),
-                  ),
+                textField(
+                  _password,
+                  'Password',
                 ),
                 const SizedBox(
                   height: 20,
