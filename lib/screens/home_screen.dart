@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,6 +12,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    print("rebuild.....!");
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Home Page',
+        ),
+        centerTitle: true,
+      ),
+    );
   }
 }

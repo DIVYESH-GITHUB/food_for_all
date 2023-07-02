@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 textField(TextEditingController controller, String label) {
   return TextFormField(
+    style: const TextStyle(
+      color: Colors.white,
+    ),
     controller: controller,
     cursorColor: Colors.white,
     decoration: InputDecoration(

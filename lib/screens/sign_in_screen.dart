@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_for_all/screens/sign_up_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -11,8 +13,35 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final _auth = FirebaseAuth.instance;
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+
+  validate(String email,String password){{
+    if(email.isEmpty || password.isEmpty){
+      
+    }
+  }
+
+  }
+
+  signIn(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        snackPosition: SnackPosition.BOTTOM,
+        "SIGN IN ERROR",
+        e.code.toString(),
+        backgroundColor: Colors.red,
+        isDismissible: true,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +93,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      signIn(
+                        _email.text.trim().toString(),
+                        _password.text.trim().toString(),
+                      );
+                    },
                     child: ListTile(
                       trailing: const Icon(
                         Icons.arrow_forward,
@@ -100,11 +134,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUpScreen(),
-                          ),
+                        Get.offAll(
+                          const SignUpScreen(),
                         );
                       },
                       child: Text(
