@@ -1,13 +1,15 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:food_for_all/auth/firebase/store_user_data.dart';
 import 'package:food_for_all/screens/home_screen.dart';
+import 'package:get/get.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
-  const EmailVerificationScreen({super.key});
+  final String email;
+  final String username;
+  const EmailVerificationScreen(
+      {super.key, required this.email, required this.username});
 
   @override
   State<EmailVerificationScreen> createState() =>
@@ -23,18 +25,15 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     user!.sendEmailVerification();
     timer = Timer.periodic(
       const Duration(
-        seconds: 5,
+        seconds: 1,
       ),
       (timer) async {
         final user = _auth.currentUser;
         await user!.reload();
         if (user.emailVerified) {
+          StoreUserData().verifiedUSer(widget.email, widget.username);
           timer.cancel();
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
+          Get.off(const HomeScreen());
         }
       },
     );
@@ -64,11 +63,41 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
           ),
-          child: Text(
-            'Email is send to ${_auth.currentUser!.email} please verify..!',
-            style: const TextStyle(
-              fontSize: 19,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Email is send to',
+                style: TextStyle(fontSize: 19, letterSpacing: 1),
+              ),
+              const SizedBox(
+                height: 3,
+              ),
+              Text(
+                '${_auth.currentUser?.email}',
+                style: const TextStyle(
+                  fontSize: 19,
+                  letterSpacing: 1.1,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(
+                height: 3,
+              ),
+              const Text(
+                'Please verify your Email...!',
+                style: TextStyle(
+                  fontSize: 19,
+                  letterSpacing: 1.1,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ],
           ),
         ),
       ),

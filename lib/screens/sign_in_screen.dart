@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:food_for_all/get_states/loading.dart';
 import 'package:food_for_all/screens/sign_up_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../auth/firebase/sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -13,34 +14,9 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final _auth = FirebaseAuth.instance;
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-
-  validate(String email,String password){{
-    if(email.isEmpty || password.isEmpty){
-      
-    }
-  }
-
-  }
-
-  signIn(String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      Get.snackbar(
-        snackPosition: SnackPosition.BOTTOM,
-        "SIGN IN ERROR",
-        e.code.toString(),
-        backgroundColor: Colors.red,
-        isDismissible: true,
-      );
-    }
-  }
+  final controller = Get.put(Loading());
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +25,13 @@ class _SignInScreenState extends State<SignInScreen> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: 12,
+            horizontal: 15,
           ),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 100,
+                SizedBox(
+                  height: Get.height * 0.2,
                 ),
                 SizedBox(
                   height: 200,
@@ -69,6 +45,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 textField(
                   _email,
                   'Email',
+                  const Icon(
+                    Icons.email,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(
                   height: 18,
@@ -76,6 +56,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 textField(
                   _password,
                   'Password',
+                  const Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -94,25 +78,35 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                     onPressed: () {
-                      signIn(
+                      controller.changeLoadingTrue();
+                      SignIn().validate(
                         _email.text.trim().toString(),
                         _password.text.trim().toString(),
                       );
+                      controller.changeLoadingFalse();
                     },
-                    child: ListTile(
-                      trailing: const Icon(
-                        Icons.arrow_forward,
-                      ),
-                      contentPadding: const EdgeInsets.only(
-                        left: 130,
-                      ),
-                      title: Text(
-                        'Sign In',
-                        style: GoogleFonts.abyssinicaSil(
-                          fontSize: 20,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
+                    child: Obx(
+                      () => controller.isLoading.value == true
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : ListTile(
+                              trailing: const Icon(
+                                Icons.arrow_forward,
+                              ),
+                              title: Padding(
+                                padding: EdgeInsets.only(
+                                  left: Get.width * 0.25,
+                                ),
+                                child: Text(
+                                  'Sign In',
+                                  style: GoogleFonts.abyssinicaSil(
+                                    fontSize: 20,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                 ),

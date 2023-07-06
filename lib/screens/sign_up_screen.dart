@@ -1,10 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/screens/email_verification.dart';
+import 'package:food_for_all/get_states/loading.dart';
+import 'package:food_for_all/screens/ngo_sign_up.dart';
 import 'package:food_for_all/screens/sign_in_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../auth/firebase/sign_up.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,79 +15,11 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  bool isLoading = false;
-  final _auth = FirebaseAuth.instance;
+  final controller = Get.put(Loading());
+
   final TextEditingController _username = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-
-  validate() {
-    final username = _username.text.trim().toString();
-    final email = _email.text.trim().toString();
-    final password = _password.text.trim().toString();
-    if (username.isEmpty || email.isEmpty || password.isEmpty) {
-      Get.snackbar(
-        snackPosition: SnackPosition.TOP,
-        "SIGN UP ERROR",
-        '',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error),
-        isDismissible: true,
-        messageText: const Text(
-          'Some of the fields are empty !',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-      );
-      setState(() {
-        isLoading = false;
-      });
-    } else {
-      signUp(
-        _email.text.trim().toString(),
-        _password.text.trim().toString(),
-      );
-    }
-  }
-
-  signUp(String email, String password) async {
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      Get.to(const EmailVerificationScreen());
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      Get.snackbar(
-        snackPosition: SnackPosition.TOP,
-        "SIGN UP ERROR",
-        e.code.toString(),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error),
-        isDismissible: true,
-      );
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      Get.snackbar(
-        snackPosition: SnackPosition.TOP,
-        "SIGN UP ERROR",
-        e.toString(),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error),
-        isDismissible: true,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,20 +27,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
+          padding: const EdgeInsets.only(
+            left: 13,
+            right: 13,
           ),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: Get.height * 0.04,
                 ),
                 SizedBox(
                   height: 200,
                   child: Image.asset(
                     'assets/images/logo-white.png',
                   ),
+                ),
+                SizedBox(
+                  height: Get.height * 0.04,
                 ),
                 SizedBox(
                   height: 55,
@@ -125,7 +62,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(const NgoSignUpScreen());
+                    },
                     child: Text(
                       'Register NGO',
                       style: GoogleFonts.abyssinicaSil(
@@ -151,6 +90,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 textField(
                   _username,
                   'Username',
+                  const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(
                   height: 14,
@@ -158,6 +101,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 textField(
                   _email,
                   'Email',
+                  const Icon(
+                    Icons.email,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(
                   height: 14,
@@ -165,6 +112,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 textField(
                   _password,
                   'Password',
+                  const Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(
                   height: 14,
@@ -183,30 +134,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     onPressed: () {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      validate();
+                      controller.changeLoadingTrue();
+                      SignUp().validate(
+                        _username.text.trim().toString(),
+                        _email.text.trim().toString(),
+                        _password.text.trim().toString(),
+                      );
                     },
-                    child: isLoading
-                        ? const CircularProgressIndicator(
-                          color: Colors.white,
-                        )
-                        : ListTile(
-                            trailing: const Icon(
-                              Icons.arrow_forward,
-                            ),
-                            contentPadding: const EdgeInsets.only(
-                              left: 130,
-                            ),
-                            title: Text(
-                              'Sign Up',
-                              style: GoogleFonts.abyssinicaSil(
-                                fontSize: 20,
-                                letterSpacing: 1.5,
+                    child: Obx(
+                      () => controller.isLoading.value == true
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : ListTile(
+                              trailing: const Icon(
+                                Icons.arrow_forward,
+                              ),
+                              contentPadding: EdgeInsets.only(
+                                left: Get.width * 0.27,
+                              ),
+                              title: Text(
+                                'Sign Up',
+                                style: GoogleFonts.abyssinicaSil(
+                                  fontSize: 20,
+                                  letterSpacing: 1.5,
+                                ),
                               ),
                             ),
-                          ),
+                    ),
                   ),
                 ),
                 const SizedBox(

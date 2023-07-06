@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-textField(TextEditingController controller, String label) {
-  return TextFormField(
+textField(TextEditingController controller, String label, Icon icon) {
+  return TextField(
     style: const TextStyle(
       color: Colors.white,
     ),
     controller: controller,
     cursorColor: Colors.white,
     decoration: InputDecoration(
+      isDense: true,
+      prefixIcon: icon,
       labelText: label,
       labelStyle: GoogleFonts.abyssinicaSil(
         color: Colors.white,
