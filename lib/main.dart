@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:food_for_all/firebase_options.dart';
 import 'package:food_for_all/screens/home_screen.dart';
-import 'package:food_for_all/screens/sign_in_screen.dart';
+import 'package:food_for_all/screens/ngo_verify_screen.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
       home: _auth.currentUser?.emailVerified == true
           ? const HomeScreen()
-          : const SignInScreen(),
+          : const NgoVerifyScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

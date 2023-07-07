@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_for_all/get_states/loading.dart';
-import 'package:food_for_all/screens/ngo_sign_up.dart';
+import 'package:food_for_all/screens/ngo_sign_up_screen.dart';
 import 'package:food_for_all/screens/sign_in_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';

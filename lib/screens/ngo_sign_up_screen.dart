@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print, unnecessary_string_interpolations, unnecessary_brace_in_string_interps
 
 import 'package:country_state_city_picker/country_state_city_picker.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:food_for_all/auth/firebase/ngo_sign_up.dart';
 import 'package:food_for_all/get_states/stepper.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +18,7 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _mobileNumber = TextEditingController();
   final TextEditingController _address = TextEditingController();
+  final TextEditingController _password = TextEditingController();
   String? countryValue;
   String? stateValue;
   String? cityValue;
@@ -127,6 +128,47 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                   left: 5,
                 ),
                 child: const Text(
+                  'Password',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              TextField(
+                controller: _password,
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+                decoration: InputDecoration(
+                  isDense: true,
+                  filled: true,
+                  fillColor: Colors.grey.withOpacity(
+                    0.4,
+                  ),
+                  hintText: 'Enter password',
+                  hintStyle: const TextStyle(
+                    color: Colors.black,
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                    ),
+                  ),
+                  focusedBorder: const OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.only(
+                  left: 5,
+                ),
+                child: const Text(
                   'NGO mobile No.',
                   style: TextStyle(
                     fontSize: 15,
@@ -210,6 +252,7 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                   });
                 },
               ),
+              space(),
             ],
           ),
         ),
@@ -307,15 +350,52 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text('NGO name : ${_name.text}'),
-              Text('NGO email : ${_email.text}'),
-              Text('Mobile No: ${_mobileNumber.text}'),
-              Text('NGO type : $_selectedItem'),
-              const Text('NGO address : '),
-              Text('${_address.text}'),
-              Text('Country : ${countryValue}'),
-              Text('State : ${stateValue}'),
-              Text('City : ${cityValue}'),
+              space(),
+              Text(
+                'NGO name :- ${_name.text}',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                'NGO email :- ${_email.text}',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                'Mobile No:- ${_mobileNumber.text}',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                'NGO type :- $_selectedItem',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                'NGO address :- ',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                '${_address.text}',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                'Country :- ${countryValue}',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                'State :- ${stateValue}',
+                style: textStyle(),
+              ),
+              space(),
+              Text(
+                'City :- ${cityValue}',
+                style: textStyle(),
+              ),
+              space(),
             ],
           ),
         ),
@@ -325,6 +405,18 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
             : StepState.indexed,
       ),
     ];
+  }
+
+  textStyle() {
+    return const TextStyle(
+      fontSize: 16,
+    );
+  }
+
+  space() {
+    return const SizedBox(
+      height: 3,
+    );
   }
 
   @override
@@ -346,7 +438,7 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
             steps: stepList(),
             onStepContinue: () {
               if (controller.currentStep.value == stepList().length - 1) {
-                print('send data to sever');
+                null;
               } else {
                 controller.currentStep.value++;
               }
@@ -373,17 +465,22 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                     ),
                   ],
                 );
-              }
-              if (controller.currentStep.value == 2) {
+              } else if (controller.currentStep.value == 2) {
                 return Row(
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        FirebaseDatabase.instance.ref('ngo').child('2').set({
-                          'name': _name.text,
-                          'email': _email.text,
-                          'number': _mobileNumber.text,
-                        });
+                      onPressed: () async {
+                        await NgoSignUp().validate(
+                          _name.text,
+                          _email.text,
+                          _password.text,
+                          _mobileNumber.text,
+                          _selectedItem.toString(),
+                          _address.text,
+                          countryValue.toString(),
+                          stateValue.toString(),
+                          cityValue.toString(),
+                        );
                       },
                       child: const Text(
                         'SUBMIT',
@@ -400,26 +497,27 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                     ),
                   ],
                 );
+              } else {
+                return Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: details.onStepContinue,
+                      child: const Text(
+                        'CONTINUE',
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    ElevatedButton(
+                      onPressed: details.onStepCancel,
+                      child: const Text(
+                        'PREVIOUS',
+                      ),
+                    ),
+                  ],
+                );
               }
-              return Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: details.onStepContinue,
-                    child: const Text(
-                      'CONTINUE',
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  ElevatedButton(
-                    onPressed: details.onStepCancel,
-                    child: const Text(
-                      'PREVIOUS',
-                    ),
-                  ),
-                ],
-              );
             },
           ),
         ),
