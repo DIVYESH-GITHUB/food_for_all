@@ -5,18 +5,17 @@ import 'package:food_for_all/auth/firebase/store_user_data.dart';
 import 'package:food_for_all/screens/home_screen.dart';
 import 'package:get/get.dart';
 
-class EmailVerificationScreen extends StatefulWidget {
-  final String email;
-  final String username;
-  const EmailVerificationScreen(
-      {super.key, required this.email, required this.username});
+class UserEmailVerificationScreen extends StatefulWidget {
+  final Map<String, dynamic> userData;
+  const UserEmailVerificationScreen(
+      {super.key,required this.userData});
 
   @override
-  State<EmailVerificationScreen> createState() =>
-      _EmailVerificationScreenState();
+  State<UserEmailVerificationScreen> createState() =>
+      _UserEmailVerificationScreen();
 }
 
-class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
+class _UserEmailVerificationScreen extends State<UserEmailVerificationScreen> {
   final _auth = FirebaseAuth.instance;
   Timer? timer;
   @override
@@ -31,7 +30,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         final user = _auth.currentUser;
         await user!.reload();
         if (user.emailVerified) {
-          StoreUserData().verifiedUSer(widget.email, widget.username);
+          StoreUserData(userData: widget.userData).verifiedUSer();
           timer.cancel();
           Get.off(const HomeScreen());
         }

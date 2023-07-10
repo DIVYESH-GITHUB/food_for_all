@@ -2,8 +2,11 @@
 
 import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/auth/firebase/ngo_sign_up.dart';
+import 'package:food_for_all/auth/firebase/store_ngo_data.dart';
 import 'package:food_for_all/get_states/stepper.dart';
+import 'package:food_for_all/models/ngo_model_pass.dart';
+import 'package:food_for_all/widgets/ngo_form_text.dart';
+import 'package:food_for_all/widgets/ngo_text_field.dart';
 import 'package:get/get.dart';
 
 class NgoSignUpScreen extends StatefulWidget {
@@ -41,181 +44,43 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
         content: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(
-                  left: 5,
-                ),
-                child: const Text(
-                  'NGO name',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              ngoFormText('NGO name'),
               const SizedBox(
                 height: 8,
               ),
-              TextField(
-                controller: _name,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  isDense: true,
-                  filled: true,
-                  fillColor: Colors.grey.withOpacity(
-                    0.4,
-                  ),
-                  hintText: 'Enter the NGO name',
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  focusedBorder: const OutlineInputBorder(),
-                ),
-              ),
+              ngoTextField(
+                  'Enter the NGO name', _name, TextInputType.name, false, 1),
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(
-                  left: 5,
-                ),
-                child: const Text(
-                  'NGO email',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              ngoFormText("NGO email"),
               const SizedBox(
                 height: 8,
               ),
-              TextFormField(
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                enableSuggestions: true,
-                decoration: InputDecoration(
-                  isDense: true,
-                  filled: true,
-                  fillColor: Colors.grey.withOpacity(
-                    0.4,
-                  ),
-                  hintText: "Enter NGO's email",
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  focusedBorder: const OutlineInputBorder(),
-                ),
-              ),
+              ngoTextField("Enter NGO's email", _email,
+                  TextInputType.emailAddress, false, 1),
               const SizedBox(
                 height: 14,
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(
-                  left: 5,
-                ),
-                child: const Text(
-                  'Password',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              ngoFormText('Password'),
               const SizedBox(
                 height: 8,
               ),
-              TextField(
-                controller: _password,
-                obscureText: true,
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
-                  isDense: true,
-                  filled: true,
-                  fillColor: Colors.grey.withOpacity(
-                    0.4,
-                  ),
-                  hintText: 'Enter password',
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  focusedBorder: const OutlineInputBorder(),
-                ),
-              ),
+              ngoTextField(
+                  "Enter password", _password, TextInputType.text, true, 1),
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(
-                  left: 5,
-                ),
-                child: const Text(
-                  'NGO mobile No.',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              ngoFormText("NGO mobile No."),
               const SizedBox(
                 height: 8,
               ),
-              TextFormField(
-                controller: _mobileNumber,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  isDense: true,
-                  filled: true,
-                  fillColor: Colors.grey.withOpacity(
-                    0.4,
-                  ),
-                  hintText: "Enter NGO's mobile Number",
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  focusedBorder: const OutlineInputBorder(),
-                ),
-              ),
+              ngoTextField("Enter NGO's mobile Number", _mobileNumber,
+                  TextInputType.phone, false, 1),
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(
-                  left: 5,
-                ),
-                child: const Text(
-                  'NGO type',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              ngoFormText('NGO type'),
               const SizedBox(
                 height: 10,
               ),
@@ -267,44 +132,12 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
         ),
         content: Column(
           children: [
-            Container(
-              alignment: Alignment.topLeft,
-              padding: const EdgeInsets.only(
-                left: 5,
-              ),
-              child: const Text(
-                'Address',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            ngoFormText('Address'),
             const SizedBox(
               height: 8,
             ),
-            TextFormField(
-              controller: _address,
-              keyboardType: TextInputType.streetAddress,
-              maxLines: 7,
-              decoration: InputDecoration(
-                isDense: true,
-                filled: true,
-                fillColor: Colors.grey.withOpacity(
-                  0.4,
-                ),
-                hintText: "Enter NGO's address",
-                hintStyle: const TextStyle(
-                  color: Colors.black,
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                  ),
-                ),
-                focusedBorder: const OutlineInputBorder(),
-              ),
-            ),
+            ngoTextField("Enter NGO's address", _address,
+                TextInputType.streetAddress, false, 5),
             Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: 5,
@@ -470,17 +303,21 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        await NgoSignUp().validate(
-                          _name.text,
-                          _email.text,
-                          _password.text,
-                          _mobileNumber.text,
-                          _selectedItem.toString(),
-                          _address.text,
-                          countryValue.toString(),
-                          stateValue.toString(),
-                          cityValue.toString(),
+                        NgoModelPassword ngoDataWithPasswordobj =
+                            NgoModelPassword(
+                          email: _email.text,
+                          mobileNumber: _mobileNumber.text,
+                          name: _name.text,
+                          ngoAddress: _address.text,
+                          ngoCity: cityValue.toString(),
+                          ngoCountry: countryValue.toString(),
+                          ngoState: stateValue.toString(),
+                          ngoType: _selectedItem.toString(),
+                          password: _password.text,
                         );
+                        await StoreNgoData(
+                                ngoDataPasswordobj: ngoDataWithPasswordobj)
+                            .validate();
                       },
                       child: const Text(
                         'SUBMIT',

@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/screens/sign_in_screen.dart';
+import 'package:food_for_all/screens/auth_screens/sign_in_screen.dart';
 import 'package:get/get.dart';
 
-class NgoVerifyScreen extends StatefulWidget {
+class NgoMessage extends StatefulWidget {
   final String? name;
-  const NgoVerifyScreen({super.key, this.name});
+  const NgoMessage({super.key, this.name});
 
   @override
-  State<NgoVerifyScreen> createState() => _NgoVerifyScreenState();
+  State<NgoMessage> createState() => _NgoMessageState();
 }
 
-class _NgoVerifyScreenState extends State<NgoVerifyScreen> {
-  int time = 10;
+class _NgoMessageState extends State<NgoMessage> {
+  int time = 15;
   Timer? timer;
   @override
   void initState() {
@@ -93,6 +93,7 @@ class _NgoVerifyScreenState extends State<NgoVerifyScreen> {
                     'Redirecting to SignIn page in ',
                     style: TextStyle(
                       letterSpacing: 1.4,
+                      fontSize: 16,
                     ),
                   ),
                   Text(
@@ -100,9 +101,23 @@ class _NgoVerifyScreenState extends State<NgoVerifyScreen> {
                     style: const TextStyle(
                       letterSpacing: 1.4,
                       color: Colors.blue,
+                      fontSize: 17,
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: GestureDetector(
+                onTap: () => Get.off(const SignInScreen()),
+                child: const Text(
+                  'Redirect to SignIn page in now ',
+                  style: TextStyle(
+                      letterSpacing: 1.4, fontSize: 16, color: Colors.blue),
+                ),
               ),
             )
           ],

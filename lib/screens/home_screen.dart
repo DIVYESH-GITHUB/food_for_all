@@ -2,7 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/screens/sign_in_screen.dart';
+import 'package:food_for_all/screens/auth_screens/sign_in_screen.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: GestureDetector(
               onTap: () async {
                 await _auth.signOut();
-                print(_auth.currentUser);
                 Get.off(const SignInScreen());
               },
               child: const Icon(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:food_for_all/get_states/loading.dart';
-import 'package:food_for_all/screens/ngo_sign_up_screen.dart';
-import 'package:food_for_all/screens/sign_in_screen.dart';
+import 'package:food_for_all/screens/auth_screens/ngo_sign_up_screen.dart';
+import 'package:food_for_all/screens/auth_screens/sign_in_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../auth/firebase/sign_up.dart';
+import '../../auth/firebase/user_sign_up.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -15,7 +15,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final controller = Get.put(Loading());
+  final loadingController = Get.put(Loading());
 
   final TextEditingController _username = TextEditingController();
   final TextEditingController _email = TextEditingController();
@@ -51,6 +51,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
                     style: ButtonStyle(
+                      elevation: const MaterialStatePropertyAll(
+                        3,
+                      ),
+                      shadowColor: const MaterialStatePropertyAll(
+                        Colors.white,
+                      ),
                       backgroundColor: const MaterialStatePropertyAll(
                         Colors.green,
                       ),
@@ -94,6 +100,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Icons.person,
                     color: Colors.white,
                   ),
+                  TextInputType.name,
+                  false,
                 ),
                 const SizedBox(
                   height: 14,
@@ -105,6 +113,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Icons.email,
                     color: Colors.white,
                   ),
+                  TextInputType.emailAddress,
+                  false,
                 ),
                 const SizedBox(
                   height: 14,
@@ -116,6 +126,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Icons.lock,
                     color: Colors.white,
                   ),
+                  TextInputType.text,
+                  true,
                 ),
                 const SizedBox(
                   height: 14,
@@ -125,6 +137,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
                     style: ButtonStyle(
+                      elevation: const MaterialStatePropertyAll(
+                        3,
+                      ),
+                      shadowColor: const MaterialStatePropertyAll(
+                        Colors.white,
+                      ),
                       shape: MaterialStatePropertyAll(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
@@ -134,31 +152,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     onPressed: () {
-                      controller.changeLoadingTrue();
-                      SignUp().validate(
+                      loadingController.changeLoadingTrue();
+                      UserSignUp().validate(
                         _username.text.trim().toString(),
                         _email.text.trim().toString(),
                         _password.text.trim().toString(),
                       );
                     },
                     child: Obx(
-                      () => controller.isLoading.value == true
+                      () => loadingController.isLoading.value
                           ? const CircularProgressIndicator(
                               color: Colors.white,
                             )
-                          : ListTile(
-                              trailing: const Icon(
-                                Icons.arrow_forward,
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                left: Get.width * 0.27,
-                              ),
-                              title: Text(
-                                'Sign Up',
-                                style: GoogleFonts.abyssinicaSil(
-                                  fontSize: 20,
-                                  letterSpacing: 1.5,
-                                ),
+                          : Text(
+                              'Sign Up',
+                              style: GoogleFonts.abyssinicaSil(
+                                fontSize: 20,
+                                letterSpacing: 1.5,
                               ),
                             ),
                     ),

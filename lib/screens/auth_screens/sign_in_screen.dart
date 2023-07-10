@@ -1,10 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:food_for_all/get_states/loading.dart';
-import 'package:food_for_all/screens/sign_up_screen.dart';
+import 'package:food_for_all/screens/auth_screens/sign_up_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../auth/firebase/sign_in.dart';
+import '../../auth/firebase/user_sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -16,7 +18,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  final controller = Get.put(Loading());
+  final loadingController = Get.put(Loading());
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     Icons.email,
                     color: Colors.white,
                   ),
+                  TextInputType.emailAddress,
+                  false,
                 ),
                 const SizedBox(
                   height: 18,
@@ -60,51 +64,48 @@ class _SignInScreenState extends State<SignInScreen> {
                     Icons.lock,
                     color: Colors.white,
                   ),
+                  TextInputType.text,
+                  true,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                SizedBox(
-                  height: 55,
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            10,
+                Obx(
+                  () => SizedBox(
+                    height: 55,
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        elevation: const MaterialStatePropertyAll(
+                          3,
+                        ),
+                        shadowColor: const MaterialStatePropertyAll(
+                          Colors.white,
+                        ),
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              10,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      controller.changeLoadingTrue();
-                      SignIn().validate(
-                        _email.text.trim().toString(),
-                        _password.text.trim().toString(),
-                      );
-                      controller.changeLoadingFalse();
-                    },
-                    child: Obx(
-                      () => controller.isLoading.value == true
+                      onPressed: () {
+                        loadingController.changeLoadingTrue();
+                        UserSignIn().validate(
+                          _email.text.trim().toString(),
+                          _password.text.trim().toString(),
+                        );
+                      },
+                      child: loadingController.isLoading.value
                           ? const CircularProgressIndicator(
                               color: Colors.white,
                             )
-                          : ListTile(
-                              trailing: const Icon(
-                                Icons.arrow_forward,
-                              ),
-                              title: Padding(
-                                padding: EdgeInsets.only(
-                                  left: Get.width * 0.25,
-                                ),
-                                child: Text(
-                                  'Sign In',
-                                  style: GoogleFonts.abyssinicaSil(
-                                    fontSize: 20,
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
+                          : Text(
+                              'Sign In',
+                              style: GoogleFonts.abyssinicaSil(
+                                fontSize: 20,
+                                letterSpacing: 1.5,
                               ),
                             ),
                     ),

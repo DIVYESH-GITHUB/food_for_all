@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-textField(TextEditingController controller, String label, Icon icon) {
+textField(TextEditingController controller, String label, Icon icon,TextInputType textInputType,bool obscure) {
   return TextField(
+    keyboardType: textInputType,
+    obscureText: obscure,
     style: const TextStyle(
       color: Colors.white,
     ),
