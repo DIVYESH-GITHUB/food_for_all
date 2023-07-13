@@ -27,9 +27,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.only(
-            left: 13,
-            right: 13,
+          padding: EdgeInsets.symmetric(
+            horizontal: Get.width * 0.06,
           ),
           child: SingleChildScrollView(
             child: Column(

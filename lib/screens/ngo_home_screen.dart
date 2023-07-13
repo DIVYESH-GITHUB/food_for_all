@@ -10,6 +10,12 @@ class NgoHomeScreen extends StatefulWidget {
 class _NgoHomeScreenState extends State<NgoHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'NGO HOME PAGE',
+        ),
+      ),
+    );
   }
 }
