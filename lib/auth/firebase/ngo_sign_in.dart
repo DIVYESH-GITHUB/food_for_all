@@ -11,14 +11,16 @@ bool found = false;
 
 class NgoSignIn {
   check(String email, String password) async {
-    await ref.get().then((value) {
-      for (var element in value.children) {
-        if (element.child('email').value == email) {
-          found = true;
-          break;
+    await ref.get().then(
+      (value) {
+        for (var element in value.children) {
+          if (element.child('email').value == email) {
+            found = true;
+            break;
+          }
         }
-      }
-    });
+      },
+    );
     if (found == true) {
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(

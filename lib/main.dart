@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:food_for_all/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'screens/auth_screens/sign_in_screen.dart';
 import 'screens/home_screen.dart';
 
 void main() async {
@@ -31,13 +29,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(context) {
     reloadUser();
     return GetMaterialApp(
-      home: _auth.currentUser?.emailVerified == true
-          ? const HomeScreen()
-          : const SignInScreen(),
-      // home: NgoRequestScreen(),
+      // home: _auth.currentUser?.emailVerified == true
+      //     ? const HomeScreen()
+      //     : const SignInScreen(),
+      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: GoogleFonts.abyssinicaSil().fontFamily,
+        fontFamily: GoogleFonts.amethysta().fontFamily,
       ),
     );
   }

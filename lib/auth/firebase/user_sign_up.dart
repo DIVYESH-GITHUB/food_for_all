@@ -36,7 +36,7 @@ class UserSignUp {
 
   validate(String username, String email, String password) {
     if (username.isEmpty || email.isEmpty || password.isEmpty) {
-      snackBar('SIGN UP ERror', 'Some Of The Fields Are Empty');
+      snackBar('SIGN UP ERROR', 'Some Of The Fields Are Empty');
       controller.changeLoadingFalse();
     } else {
       signUp(email, password, username);

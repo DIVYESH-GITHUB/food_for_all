@@ -1,0 +1,9 @@
+-name or discription #
+-weight
+-total person can be feed #
+-preparing time and date #
+-best before
+-veg/Non.veg #
+-pick up time range
+-photo
+-food source #

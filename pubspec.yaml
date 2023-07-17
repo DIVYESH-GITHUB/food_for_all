@@ -46,6 +46,10 @@ dependencies:
   country_state_city_picker: ^1.2.8
   toggle_switch: ^2.1.0
   toggle_switch_plus: ^0.0.3
+  flutter_custom_cards: ^0.2.1
+  curved_navigation_bar: ^1.0.3
+  animated_custom_dropdown: ^1.5.0
+  image_picker: ^1.0.1
 
 dev_dependencies:
   flutter_test:

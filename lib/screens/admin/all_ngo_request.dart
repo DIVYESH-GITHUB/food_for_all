@@ -31,7 +31,6 @@ class _NgoRequestScreenState extends State<NgoRequestScreen> {
             child: FirebaseAnimatedList(
               query: ref,
               itemBuilder: (context, snapshot, animation, index) {
-                ref.get();
                 final ngo = snapshot.value as Map;
                 return Card(
                   elevation: 3,

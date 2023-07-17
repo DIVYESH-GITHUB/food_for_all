@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:food_for_all/auth/firebase/ngo_sign_in.dart';
 import 'package:food_for_all/get_states/loading.dart';
@@ -228,7 +227,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      // loadingController.changeLoadingTrue();
+                                      loadingController.changeLoadingTrue();
                                       NgoSignIn().check(
                                         _ngoEmail.text.trim().toString(),
                                         _ngoPassword.text.trim().toString(),

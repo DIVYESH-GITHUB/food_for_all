@@ -1,0 +1,7 @@
+-full_name
+-age
+-gender
+-photo
+-address
+-phone_number
+
