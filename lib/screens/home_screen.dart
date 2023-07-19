@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_print
-
 import 'dart:io';
 
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
@@ -21,16 +20,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   File? _image;
-  Future _pickImage(ImageSource source) async {
+
+  Future getImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
     if (image == null) return;
-    File? img = File(image.path);
+    final tempImage = File(image.path);
     setState(() {
-      _image = img;
+      _image = tempImage;
     });
   }
 
   final _auth = FirebaseAuth.instance;
+
+  bool isOther = false;
   String date =
       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
   String time =
@@ -215,17 +217,145 @@ class _HomeScreenState extends State<HomeScreen> {
                               'Hostel mess',
                               'Other mess',
                               'freshly prepared',
-                              'hello',
+                              'Other'
                             ],
                             controller: _foodSource,
+                            onChanged: (p0) {
+                              if (p0 == 'Other') {
+                                setState(() {
+                                  isOther = true;
+                                });
+                              } else {
+                                setState(() {
+                                  isOther = false;
+                                });
+                              }
+                            },
                             fillColor: Colors.grey.shade300,
+                            hintText: 'Food Source',
+                            hintStyle: const TextStyle(
+                              color: Colors.black45,
+                            ),
                           ),
+                          isOther == true
+                              ? TextField(
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.grey.shade300,
+                                    filled: true,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        10,
+                                      ),
+                                      borderSide: const BorderSide(
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        10,
+                                      ),
+                                      borderSide: const BorderSide(
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const Center(),
                           const Text('Food image if Any : '),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  getImage(ImageSource.camera);
+                                },
+                                icon: const Icon(
+                                  Icons.camera,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  getImage(ImageSource.gallery);
+                                },
+                                icon: const Icon(
+                                  Icons.image,
+                                ),
+                              ),
+                            ],
+                          ),
+                          _image == null
+                              ? const Center()
+                              : Image.file(
+                                  _image!,
+                                  width: 100,
+                                  fit: BoxFit.fill,
+                                ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _image = null;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   )
-                : const Text('profile'),
+                : Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 130,
+                                  height: 130,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 4,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        color: Colors.black.withOpacity(0.1),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Text('username'),
+                          const TextField(
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
         animationDuration: const Duration(
