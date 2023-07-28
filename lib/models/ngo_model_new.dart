@@ -1,4 +1,4 @@
-class NgoModelPassword {
+class NgoModel {
   String? name;
   String? email;
   String? mobileNumber;
@@ -7,18 +7,22 @@ class NgoModelPassword {
   String? ngoCountry;
   String? ngoState;
   String? ngoCity;
-  String? password;
+  bool? isVerified;
+  bool? emailVerified;
+  int? numberOfDontationReceived;
 
-  NgoModelPassword({
+  NgoModel({
+    this.name,
     this.email,
     this.mobileNumber,
-    this.name,
+    this.ngoType,
     this.ngoAddress,
-    this.ngoCity,
     this.ngoCountry,
     this.ngoState,
-    this.ngoType,
-    this.password,
+    this.ngoCity,
+    this.isVerified,
+    this.emailVerified,
+    this.numberOfDontationReceived,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,7 +35,9 @@ class NgoModelPassword {
       'ngoCountry': ngoCountry,
       'ngoState': ngoState,
       'ngoCity': ngoCity,
-      'password': password,
+      'isVerified': isVerified,
+      'emailVerified': emailVerified,
+      'numberOfDontationReceived': numberOfDontationReceived,
     };
   }
 }

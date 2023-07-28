@@ -4,23 +4,23 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/models/user_model.dart';
-import 'package:food_for_all/screens/complete_profile_screen.dart';
+import 'package:food_for_all/models/ngo_model_new.dart';
+import 'package:food_for_all/screens/verify_screens/ngo_message.dart';
 import 'package:get/get.dart';
 
-class UserEmailVerificationScreen extends StatefulWidget {
-  UserModel userModel;
-  UserEmailVerificationScreen({
+class NgoEmailVerificationScreen extends StatefulWidget {
+  NgoModel ngoModel;
+  NgoEmailVerificationScreen({
     super.key,
-    required this.userModel,
+    required this.ngoModel,
   });
 
   @override
-  State<UserEmailVerificationScreen> createState() =>
-      _UserEmailVerificationScreen();
+  State<NgoEmailVerificationScreen> createState() =>
+      _NgoEmailVerificationScreen();
 }
 
-class _UserEmailVerificationScreen extends State<UserEmailVerificationScreen> {
+class _NgoEmailVerificationScreen extends State<NgoEmailVerificationScreen> {
   final db = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   Timer? timer;
@@ -37,14 +37,14 @@ class _UserEmailVerificationScreen extends State<UserEmailVerificationScreen> {
         await user?.reload();
         if (user!.emailVerified) {
           timer.cancel();
-          widget.userModel.emailVerified = true;
+          widget.ngoModel.emailVerified = true;
           db
-              .collection('users')
-              .doc(widget.userModel.email)
-              .set(widget.userModel.toMap());
+              .collection('ngo')
+              .doc(widget.ngoModel.email)
+              .set(widget.ngoModel.toMap());
           Get.off(
-            CompleteProfileScreen(
-              userModel: widget.userModel,
+            NgoMessage(
+              name: widget.ngoModel.name,
             ),
           );
         }

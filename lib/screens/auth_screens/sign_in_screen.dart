@@ -9,7 +9,7 @@ import 'package:food_for_all/widgets/snack_bar.dart';
 import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+import 'package:toggle_switch_plus/toggle_switch_plus.dart';
 import '../../auth/firebase/user_sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -39,9 +39,10 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: Get.height * 0.2,
+                  height: Get.height * 0.15,
                 ),
                 SizedBox(
                   height: 200,
@@ -49,27 +50,30 @@ class _SignInScreenState extends State<SignInScreen> {
                     'assets/images/logo-white.png',
                   ),
                 ),
-                ToggleSwitch(
-                  labels: const [
-                    'user',
-                    'NGO',
-                    'admin',
-                  ],
-                  onToggle: (index) {
-                    userTypeController.userType.value = index!;
-                  },
-                  fontSize: 18,
-                  minWidth: 110,
-                  icons: const [
-                    Icons.person,
-                    Icons.fastfood,
-                    Icons.admin_panel_settings,
-                  ],
-                  iconSize: 20,
-                  inactiveBgColor: Colors.white,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
+                  child: Center(
+                    child: ToggleSwitchPlus(
+                      fontSize: 18,
+                      cornerRadius: 10,
+                      initialValue: userTypeController.userType.value,
+                      values: const [
+                        'user',
+                        'NGO',
+                        'admin',
+                      ],
+                      onChanged: (value) {
+                        userTypeController.userType.value = value;
+                      },
+                      unselectedBackgroundColor: Colors.white,
+                      unselectedForegroundColor: Colors.black,
+                    ),
+                  ),
                 ),
                 Obx(
-                  () => userTypeController.userType.value == 0
+                  () => userTypeController.userType.value == 'user'
                       ? Column(
                           children: [
                             const SizedBox(
@@ -122,10 +126,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ),
                                 onPressed: () {
                                   loadingController.changeLoadingTrue();
-                                  UserSignIn().validate(
-                                    _userEmail.text.trim().toString(),
-                                    _userPassword.text.trim().toString(),
-                                  );
+                                  UserSignIn(
+                                    email: _userEmail.text.trim(),
+                                    password: _userPassword.text.trim(),
+                                  ).validate();
                                 },
                                 child: loadingController.isLoading.value
                                     ? const CircularProgressIndicator(
@@ -174,7 +178,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ],
                         )
-                      : userTypeController.userType.value == 1
+                      : userTypeController.userType.value == 'NGO'
                           ? Column(
                               children: [
                                 const SizedBox(

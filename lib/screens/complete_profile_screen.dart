@@ -1,28 +1,44 @@
-import 'dart:io';
+// ignore_for_file: must_be_immutable
 
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:food_for_all/models/user_model.dart';
+import 'package:food_for_all/screens/user/home_screen.dart';
+import 'package:food_for_all/widgets/snack_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+import 'package:toggle_switch_plus/toggle_switch_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
-  const CompleteProfileScreen({super.key});
+  UserModel userModel;
+  CompleteProfileScreen({
+    super.key,
+    required this.userModel,
+  });
 
   @override
   State<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
 }
 
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
+  
+  final db = FirebaseFirestore.instance;
   //    IMAGE VARIABLE
   File? _image;
 
   //    CONTROLLER
-  final TextEditingController _fullName = TextEditingController();
-  final TextEditingController _age = TextEditingController();
+  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _middleName = TextEditingController();
+  final TextEditingController _lastName = TextEditingController();
   final TextEditingController _address = TextEditingController();
+  final TextEditingController _mobileNumber = TextEditingController();
+  String gender = 'Male';
 
-  //  LOCATION FUNCTIONS - 1
+  //  FUNCTIONS FOR GETTING LOCATION FROM LONGITUDE & LATITUDE
   Future<void> getAddressFromLatLong(Position position) async {
     List<Placemark> placemark =
         await placemarkFromCoordinates(position.latitude, position.longitude);
@@ -32,27 +48,35 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     });
   }
 
-  //  LOCATION FUNCTIONS - 2
+  //  FUNCTIONS TO GET LONGITUDE & LATITUDE
   Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
+    return await Geolocator.getCurrentPosition();
+  }
+
+  //  FUNCTION TO CHECK IF LOCATION IS ENABLED OR NOT
+  Future<int> checkLocationEnabled() async {
+    final isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isLocationEnabled) {
       await Geolocator.openLocationSettings();
-      return Future.error('Location services are disabled.');
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+      if (!isLocationEnabled) {
+        return 0;
       }
     }
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+    return 1;
+  }
+
+  // FUNCTION TO CHECK IF LOCATION PERMISSIONS ARE GRENTED OR NOT
+  Future<int> locationPermission() async {
+    PermissionStatus locationPermissionStatus =
+        await Permission.location.request();
+    if (locationPermissionStatus == PermissionStatus.granted) {
+      return 1;
+    } else if (locationPermissionStatus == PermissionStatus.denied) {
+      return 0;
+    } else if (locationPermissionStatus == PermissionStatus.permanentlyDenied) {
+      return 0;
     }
-    return await Geolocator.getCurrentPosition();
+    return 0;
   }
 
   //  FUNCTION FOR PICKING IMAGE
@@ -92,22 +116,34 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
-                  height: 25,
+                  height: 20,
                 ),
                 Center(
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      const CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        radius: 70,
-                        child: CircleAvatar(
-                          radius: 65,
-                          backgroundImage:
-                              AssetImage('assets/images/logo-white.png'),
-                        ),
-                      ),
+                      _image == null
+                          ? const CircleAvatar(
+                              radius: 65,
+                              backgroundColor: Colors.grey,
+                              child: CircleAvatar(
+                                radius: 60,
+                                backgroundImage:
+                                    AssetImage('assets/images/logo-white.png'),
+                              ),
+                            )
+                          : CircleAvatar(
+                              radius: 65,
+                              backgroundColor: Colors.grey,
+                              child: CircleAvatar(
+                                radius: 60,
+                                backgroundImage: FileImage(_image!),
+                              ),
+                            ),
                       Container(
+                        margin: const EdgeInsets.only(
+                          right: 8,
+                        ),
                         width: 35,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
@@ -116,70 +152,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: IconButton(
                           iconSize: 20,
                           onPressed: () {
-                            showModalBottomSheet(
-                              shape: ContinuousRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  10,
-                                ),
-                              ),
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 10,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                        'Pick A option for image',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          getImage(ImageSource.camera);
-                                        },
-                                        child: const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.camera,
-                                            ),
-                                            Text(
-                                              'Camera',
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          getImage(ImageSource.gallery);
-                                        },
-                                        child: const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.image,
-                                            ),
-                                            Text(
-                                              'Gallery',
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
+                            bottomSheet();
                           },
                           icon: const Icon(
                             Icons.edit,
@@ -193,36 +166,54 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   height: 10,
                 ),
                 const Text(
-                  'Full name',
+                  'First name',
                 ),
-                textField(_fullName, TextInputType.name),
+                textField(_firstName, TextInputType.name),
                 const SizedBox(
-                  height: 17,
+                  height: 27,
                 ),
                 const Text(
-                  'Age',
+                  'Middle name',
                 ),
-                textField(_age, TextInputType.number),
+                textField(_middleName, TextInputType.name),
                 const SizedBox(
-                  height: 17,
+                  height: 27,
                 ),
-                const Text('Gender'),
+                const Text(
+                  'Last name',
+                ),
+                textField(_lastName, TextInputType.name),
                 const SizedBox(
-                  height: 15,
+                  height: 27,
                 ),
-                ToggleSwitch(
-                  minWidth: 100,
-                  labels: const [
+                const Text(
+                  'Mobile Number',
+                ),
+                textField(_mobileNumber, TextInputType.number),
+                const SizedBox(
+                  height: 27,
+                ),
+                const Text(
+                  'Gender',
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                ToggleSwitchPlus(
+                  values: const [
                     'Male',
                     'Female',
                   ],
-                  icons: const [
-                    Icons.male,
-                    Icons.female,
-                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      gender = value;
+                    });
+                  },
+                  initialValue: gender,
+                  cornerRadius: 10,
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 const Text(
                   'Address',
@@ -235,8 +226,15 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                      Position position = await _determinePosition();
-                      await getAddressFromLatLong(position);
+                      if (await checkLocationEnabled() == 1) {
+                        if (await locationPermission() == 0) {
+                          await snackBar('LOCATION ERROR',
+                              'please grant permission to use this feature');
+                        } else {
+                          Position position = await _determinePosition();
+                          await getAddressFromLatLong(position);
+                        }
+                      }
                     },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -249,6 +247,42 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     ),
                   ),
                 ),
+                Center(
+                  child: ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                        Colors.green,
+                      ),
+                    ),
+                    onPressed: () {
+                      var userModel = widget.userModel;
+                      userModel.firstName = _firstName.text.trim();
+                      userModel.middleName = _middleName.text.trim();
+                      userModel.lastName = _lastName.text.trim();
+                      userModel.mobileNumber = _mobileNumber.text.trim();
+                      userModel.gender = gender;
+                      userModel.address = _address.text.trim();
+                      db
+                          .collection('users')
+                          .doc(widget.userModel.email)
+                          .update(widget.userModel.toMap());
+                      Get.to(const HomeScreen());
+                    },
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Continue'),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          size: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -257,6 +291,75 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     );
   }
 
+  // SHOW BOTTOM SHEET ON PRESSED OF IMAGE SELECT BUTTON
+  bottomSheet() {
+    return showModalBottomSheet(
+      shape: ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          10,
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 10,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Pick A option for image',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  getImage(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.camera,
+                    ),
+                    Text(
+                      'Camera',
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  getImage(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.image,
+                    ),
+                    Text(
+                      'Gallery',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  //  LOCAL TEXT FIELD FOR THIS PAGES ONLY
   TextField textField(
     TextEditingController controller,
     TextInputType textInputType,

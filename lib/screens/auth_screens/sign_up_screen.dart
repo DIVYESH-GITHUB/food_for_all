@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_for_all/get_states/loading.dart';
+import 'package:food_for_all/models/user_model.dart';
 import 'package:food_for_all/screens/auth_screens/ngo_sign_up_screen.dart';
 import 'package:food_for_all/screens/auth_screens/sign_in_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
@@ -15,6 +16,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  UserModel userModel = UserModel();
   final loadingController = Get.put(Loading());
 
   final TextEditingController _username = TextEditingController();
@@ -151,11 +153,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     onPressed: () {
+                      UserModel userModel = UserModel(
+                        email: _email.text.trim(),
+                        userName: _username.text.trim(),
+                      );
                       loadingController.changeLoadingTrue();
-                      UserSignUp().validate(
-                        _username.text.trim().toString(),
-                        _email.text.trim().toString(),
-                        _password.text.trim().toString(),
+                      UserSignUp(
+                        userModel: userModel,
+                        password: _password.text.trim(),
+                      ).validate(
+                        _password.text.trim(),
                       );
                     },
                     child: Obx(

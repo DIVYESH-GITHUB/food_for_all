@@ -2,9 +2,9 @@
 
 import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/auth/firebase/store_ngo_data.dart';
+import 'package:food_for_all/auth/firebase/ngo_sign_up.dart';
 import 'package:food_for_all/get_states/stepper.dart';
-import 'package:food_for_all/models/ngo_model_pass.dart';
+import 'package:food_for_all/models/ngo_model_new.dart';
 import 'package:food_for_all/widgets/ngo_form_text.dart';
 import 'package:food_for_all/widgets/ngo_text_field.dart';
 import 'package:get/get.dart';
@@ -303,8 +303,7 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        NgoModelPassword ngoDataWithPasswordobj =
-                            NgoModelPassword(
+                        NgoModel ngoModel = NgoModel(
                           email: _email.text,
                           mobileNumber: _mobileNumber.text,
                           name: _name.text,
@@ -313,11 +312,11 @@ class _NgoSignUpScreenState extends State<NgoSignUpScreen> {
                           ngoCountry: countryValue.toString(),
                           ngoState: stateValue.toString(),
                           ngoType: _selectedItem.toString(),
-                          password: _password.text,
                         );
-                        await StoreNgoData(
-                                ngoDataPasswordobj: ngoDataWithPasswordobj)
-                            .validate();
+                        NgoSignUp(
+                          ngoModel: ngoModel,
+                          password: _password.text.trim(),
+                        ).validate();
                       },
                       child: const Text(
                         'SUBMIT',
