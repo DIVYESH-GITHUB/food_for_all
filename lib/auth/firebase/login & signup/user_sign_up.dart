@@ -36,7 +36,7 @@ class UserSignUp {
     }
   }
 
-  validate(String password) {
+  validate() {
     if (userModel.userName!.isEmpty ||
         userModel.email!.isEmpty ||
         password.isEmpty) {

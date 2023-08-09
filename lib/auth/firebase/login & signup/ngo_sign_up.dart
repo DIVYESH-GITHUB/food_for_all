@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:food_for_all/models/ngo_model_new.dart';
 import 'package:food_for_all/screens/verify_screens/ngo_email_verification_screen.dart';
 import 'package:get/get.dart';
-import '../../widgets/snack_bar.dart';
+import '../../../widgets/snack_bar.dart';
 
 class NgoSignUp {
 

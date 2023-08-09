@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:food_for_all/models/user_model.dart';
 import 'package:food_for_all/screens/user/home_screen.dart';
@@ -25,7 +26,6 @@ class CompleteProfileScreen extends StatefulWidget {
 }
 
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
-  
   final db = FirebaseFirestore.instance;
   //    IMAGE VARIABLE
   File? _image;
@@ -254,7 +254,15 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         Colors.green,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      final ref = FirebaseStorage.instance
+                          .ref()
+                          .child('user images')
+                          .child('${widget.userModel.email}.jpg');
+                      UploadTask uploadTask = ref.putFile(File(_image!.path));
+                      final snapshot =
+                          await uploadTask.whenComplete(() => null);
+                      String url = await snapshot.ref.getDownloadURL();
                       var userModel = widget.userModel;
                       userModel.firstName = _firstName.text.trim();
                       userModel.middleName = _middleName.text.trim();
@@ -262,11 +270,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       userModel.mobileNumber = _mobileNumber.text.trim();
                       userModel.gender = gender;
                       userModel.address = _address.text.trim();
+                      userModel.url = url;
                       db
                           .collection('users')
                           .doc(widget.userModel.email)
                           .update(widget.userModel.toMap());
-                      Get.to(const HomeScreen());
+                      Get.off(const HomeScreen());
                     },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,

@@ -2,7 +2,7 @@
 
 import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:food_for_all/auth/firebase/ngo_sign_up.dart';
+import 'package:food_for_all/auth/firebase/login%20&%20signup/ngo_sign_up.dart';
 import 'package:food_for_all/get_states/stepper.dart';
 import 'package:food_for_all/models/ngo_model_new.dart';
 import 'package:food_for_all/widgets/ngo_form_text.dart';

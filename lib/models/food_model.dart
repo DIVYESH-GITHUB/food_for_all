@@ -1,43 +1,42 @@
-import 'dart:io';
-import 'package:food_for_all/models/ngo_model_new.dart';
-import 'package:food_for_all/models/user_model.dart';
-
 class FoodModel {
   String? description;
   String? date;
   String? time;
-  String? totalPersonCanFeede;
+  String? totalPersonCanFeed;
   String? weight;
   String? type;
   String? foodSource;
-  File? image;
-  UserModel? userModel;
-  NgoModel? ngoModel;
+  String? imageUrl;
+  bool? isDelivered;
+  Map<String, dynamic>? userModel;
+  Map<String, dynamic>? ngoModel;
 
   FoodModel({
     this.description,
     this.date,
     this.time,
-    this.totalPersonCanFeede,
+    this.totalPersonCanFeed,
     this.weight,
     this.type,
     this.foodSource,
-    this.image,
     this.userModel,
     this.ngoModel,
+    this.imageUrl,
+    this.isDelivered,
   });
 
   FoodModel.fromMap(Map<String, dynamic> map) {
     description = map['description'];
     date = map['date'];
     time = map['time'];
-    totalPersonCanFeede = map['totalPersonCanFeede'];
+    totalPersonCanFeed = map['totalPersonCanFeed'];
     weight = map['weight'];
     type = map['type'];
     foodSource = map['foodSource'];
-    image = map['image'];
     userModel = map['userModel'];
     ngoModel = map['ngoModel'];
+    imageUrl = map['imageUrl'];
+    isDelivered = map['isDelivered'];
   }
 
   Map<String, dynamic> toMap() {
@@ -45,13 +44,14 @@ class FoodModel {
       'description': description,
       'date': date,
       'time': time,
-      'totalPersonCanFeede': totalPersonCanFeede,
+      'totalPersonCanFeed': totalPersonCanFeed,
       'weight': weight,
       'type': type,
       'foodSource': foodSource,
-      'image': image,
       'userModel': userModel,
       'ngoModel': ngoModel,
+      'imageUrl': imageUrl,
+      'isDelivered': isDelivered,
     };
   }
 }

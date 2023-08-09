@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:food_for_all/firebase_options.dart';
-import 'package:food_for_all/screens/user/home_screen.dart';
+import 'package:food_for_all/screens/user/edit_profile_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,9 +31,10 @@ class _MyAppState extends State<MyApp> {
       // home: _auth.currentUser?.emailVerified == true
       //     ? const HomeScreen()
       //     : const SignInScreen(),
-      home: const HomeScreen(),
+      home: const EditProflePage(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        brightness: Brightness.dark,
         fontFamily: GoogleFonts.amethysta().fontFamily,
       ),
     );

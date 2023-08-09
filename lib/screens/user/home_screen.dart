@@ -3,9 +3,13 @@ import 'dart:io';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:food_for_all/auth/firebase/store_food_details.dart';
 import 'package:food_for_all/get_states/user_home_navigator.dart';
+import 'package:food_for_all/models/food_model.dart';
 import 'package:food_for_all/screens/auth_screens/sign_in_screen.dart';
+import 'package:food_for_all/widgets/snack_bar.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toggle_switch_plus/toggle_switch_plus.dart';
@@ -18,8 +22,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var appBarTitle = 'Home Page';
   File? _image;
-
+  FoodModel? foodModel;
   Future getImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
     if (image == null) return;
@@ -68,8 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("rebuild.....!");
-    print(_auth.currentUser);
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
@@ -89,8 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-        title: const Text(
-          'Home Page',
+        title: Text(
+          appBarTitle,
         ),
         centerTitle: true,
       ),
@@ -126,6 +129,18 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.grey,
         height: 54,
         onTap: (value) {
+          value == 0
+              ? setState(() {
+                  appBarTitle = 'home Screen';
+                })
+              : value == 1
+                  ? setState(() {
+                      appBarTitle = 'Add food';
+                    })
+                  : setState(() {
+                      appBarTitle = 'user Profle';
+                    });
+
           indexController.index.value = value;
         },
       ),
@@ -365,10 +380,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
                     ),
+                    margin: const EdgeInsets.only(
+                      bottom: 6,
+                    ),
                     padding: const EdgeInsets.only(
                       left: 10,
                       right: 10,
-                      bottom: 10,
+                      bottom: 8,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -394,6 +412,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+            SizedBox(
+              width: Get.width,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (_image == null) {
+                    snackBar('Error', 'Please provide an image');
+                    return;
+                  }
+                  final url = await storeImage();
+                  FoodModel foodModel = FoodModel(
+                    description: _description.text.trim(),
+                    date: date,
+                    time: time,
+                    totalPersonCanFeed: _totalPerson.text.trim(),
+                    weight: _weight.text.trim(),
+                    type: foodType,
+                    foodSource: _foodSource.text.trim(),
+                    imageUrl: url,
+                  );
+                  StoreFoodDetails(foodModel: foodModel).validate();
+                },
+                child: const Text(
+                  'Add Food',
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -419,5 +464,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return const SizedBox(
       height: 6,
     );
+  }
+
+  Future<String> storeImage() async {
+    final ref = FirebaseStorage.instance.ref().child('food images').child(
+        '${FirebaseAuth.instance.currentUser?.email}+${DateTime.now()}.jpg');
+    UploadTask uploadTask = ref.putFile(File(_image!.path));
+    final snapshot = await uploadTask.whenComplete(() => null);
+    String url = await snapshot.ref.getDownloadURL();
+    return url;
   }
 }

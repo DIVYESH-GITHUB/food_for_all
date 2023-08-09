@@ -10,7 +10,10 @@ class UserModel {
   int? numberOfDonations;
   int? numberOfSuccessfullDonations;
   bool? emailVerified;
+  String? url;
+  bool? profleCompleted;
   UserModel({
+    this.profleCompleted,
     this.email,
     this.mobileNumber,
     this.userName,
@@ -22,9 +25,10 @@ class UserModel {
     this.numberOfDonations,
     this.numberOfSuccessfullDonations,
     this.emailVerified,
+    this.url,
   });
-  UserModel.fromMap(Map<String, dynamic> map) {
-    email = map['email'];
+  UserModel.fromMap(Map<String, dynamic>? map) {
+    email = map!['email'];
     mobileNumber = map['mobileNumber'];
     userName = map['userName'];
     firstName = map['firstName'];
@@ -35,6 +39,8 @@ class UserModel {
     numberOfDonations = map['numberOfDonations'];
     numberOfSuccessfullDonations = map['numberOfSuccessfullDonations'];
     emailVerified = map['emailVerified'];
+    url = map['url'];
+    profleCompleted = map['profleCompleted'];
   }
   Map<String, dynamic> toMap() {
     return {
@@ -48,7 +54,8 @@ class UserModel {
       'gender': gender,
       'numberOfDonations': numberOfDonations,
       'numberOfSuccessfullDonations': numberOfSuccessfullDonations,
-      'emailVerified' : emailVerified,
+      'emailVerified': emailVerified,
+      'url': url,
     };
   }
 }

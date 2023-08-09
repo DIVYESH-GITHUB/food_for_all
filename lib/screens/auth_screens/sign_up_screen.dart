@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_for_all/get_states/loading.dart';
 import 'package:food_for_all/models/user_model.dart';
@@ -6,7 +7,7 @@ import 'package:food_for_all/screens/auth_screens/sign_in_screen.dart';
 import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../auth/firebase/user_sign_up.dart';
+import '../../auth/firebase/login & signup/user_sign_up.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -22,6 +23,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _username = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.currentUser?.reload();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,17 +160,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     onPressed: () {
+                      loadingController.changeLoadingTrue();
                       UserModel userModel = UserModel(
                         email: _email.text.trim(),
                         userName: _username.text.trim(),
                       );
-                      loadingController.changeLoadingTrue();
                       UserSignUp(
                         userModel: userModel,
                         password: _password.text.trim(),
-                      ).validate(
-                        _password.text.trim(),
-                      );
+                      ).validate();
                     },
                     child: Obx(
                       () => loadingController.isLoading.value

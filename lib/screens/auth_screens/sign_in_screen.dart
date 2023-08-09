@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
-import 'package:food_for_all/auth/firebase/ngo_sign_in.dart';
+import 'package:food_for_all/auth/firebase/login%20&%20signup/ngo_sign_in.dart';
 import 'package:food_for_all/get_states/loading.dart';
 import 'package:food_for_all/get_states/user_type.dart';
 import 'package:food_for_all/screens/admin/all_ngo_request.dart';
@@ -10,7 +10,7 @@ import 'package:food_for_all/widgets/text_field.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toggle_switch_plus/toggle_switch_plus.dart';
-import '../../auth/firebase/user_sign_in.dart';
+import '../../auth/firebase/login & signup/user_sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

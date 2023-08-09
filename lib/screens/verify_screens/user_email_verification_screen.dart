@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_for_all/models/user_model.dart';
+import 'package:food_for_all/screens/auth_screens/sign_up_screen.dart';
 import 'package:food_for_all/screens/complete_profile_screen.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +25,7 @@ class _UserEmailVerificationScreen extends State<UserEmailVerificationScreen> {
   final db = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   Timer? timer;
+  int timeOut = 30;
   @override
   void initState() {
     final user = _auth.currentUser;
@@ -33,6 +35,14 @@ class _UserEmailVerificationScreen extends State<UserEmailVerificationScreen> {
         seconds: 1,
       ),
       (timer) async {
+        setState(() {
+          timeOut--;
+        });
+        if (timeOut == 0) {
+          _auth.signOut();
+          _auth.currentUser?.delete();
+          Get.to(const SignUpScreen());
+        }
         final user = _auth.currentUser;
         await user?.reload();
         if (user!.emailVerified) {
