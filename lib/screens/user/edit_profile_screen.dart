@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:food_for_all/get_states/edit_profile_gender.dart';
 import 'package:toggle_switch_plus/toggle_switch_plus.dart';
+import 'package:get/get.dart';
 
 class EditProflePage extends StatefulWidget {
   const EditProflePage({super.key});
@@ -11,16 +13,16 @@ class EditProflePage extends StatefulWidget {
 
 class _EditProflePageState extends State<EditProflePage> {
   Map<String, dynamic>? userDetails;
+  var gender = Get.put(EditProfileGender());
   @override
   Widget build(BuildContext context) {
+
     final TextEditingController userName = TextEditingController();
     final TextEditingController firstName = TextEditingController();
     final TextEditingController middleName = TextEditingController();
     final TextEditingController lastName = TextEditingController();
-
     final TextEditingController address = TextEditingController();
 
-    String gender = 'Male';
     return Scaffold(
       appBar: AppBar(
         leading: Container(
@@ -140,20 +142,20 @@ class _EditProflePageState extends State<EditProflePage> {
                   const SizedBox(
                     height: 14,
                   ),
-                  ToggleSwitchPlus(
-                    selectedBackgroundColor: Colors.blue,
-                    unselectedBackgroundColor: Colors.grey.shade700,
-                    values: const [
-                      'Male',
-                      'Female',
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        gender = value;
-                      });
-                    },
-                    initialValue: gender,
-                    cornerRadius: 10,
+                  Obx(
+                    () => ToggleSwitchPlus(
+                      selectedBackgroundColor: Colors.blue,
+                      unselectedBackgroundColor: Colors.grey.shade700,
+                      values: const [
+                        'Male',
+                        'Female',
+                      ],
+                      onChanged: (value) {
+                        gender.gender.value = value;
+                      },
+                      initialValue: gender.gender.value,
+                      cornerRadius: 10,
+                    ),
                   ),
                   const SizedBox(
                     height: 8,
